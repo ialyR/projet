@@ -7,13 +7,55 @@
     <title>Dino</title>
 </head>
 <body>
-    <canvas id="myCanvas" style="border:5px black solid ;"width="1000" height="500"></canvas>
+    <canvas id="myCanvas" style="border:5px black solid ;"width="800" height="500"></canvas>
     <script>
-        var y1=50;
-        var x2=50;
+        
+        var x=20;
+        var y=170;
+        var x1=150;
+        var y1=350;
+        
+        var canvas = document.getElementById("myCanvas");
+        var context = canvas.getContext("2d");
+        var radius = 10;
+        
+        var vx=1;
+        var vy=1;
+
+        function draw() {
+        
+        //permet de supprimer les éléments existants dans le canvas
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        
+        //redessine le cercle rouge
         context.beginPath();
-        context.fillRect(x1, y1,15,150);
+       
+        context.fillRect(15,150,x1, y1,);
         context.fillStyle = "black";
+        
+      
+
+        if(x>canvas.width-radius || x<0){
+            vx=-vx;
+        }
+
+       if(y>canvas.height-radius || y<0)
+        {vy=-vy;} 
+        
+        x=x+vx;
+        y=y+vy;
+        //permet d'appeler la fonction indéfiniement
+        requestAnimationFrame(draw);
+        }
+        //premeier appel de la fonction
+        requestAnimationFrame(draw);
+
+
+        canvas.addEventListener('mousemove')
+        function play(event){
+
+        }
+        
 
     </script>
 </body>
