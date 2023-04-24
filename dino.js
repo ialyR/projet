@@ -23,3 +23,19 @@ Element.prototype.Animer = function () {
     ctx.stroke();
 }
     
+Element.prototype.Dessiner = function() {
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.xpos, this.ypos, this.width, this.height);
+    ctx.closePath();
+
+}
+
+function Lancer() {
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight /2;
+	
+	dino = new Element(25, 0, 50, 50, '#FF5858');
+	
+	requestAnimationFrame(Update);
+}
