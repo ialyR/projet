@@ -13,3 +13,13 @@ function Element (x, y, w, h, c) {
 	this.height=h;
 	this.color=c;
 }
+    
+Element.prototype.Animer = function () {
+    this.Dessiner();
+    
+    // ligne du sol
+    ctx.moveTo(0,canvas.height);
+    ctx.lineTo(canvas.width,canvas.height);
+    ctx.stroke();
+}
+    
