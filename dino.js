@@ -3,6 +3,7 @@ const ctx = canvas.getContext('2d');
 
 // Variables
 let dino;
+let vitesse;
 
 
 // Prototype Element
@@ -31,6 +32,10 @@ Element.prototype.Dessiner = function() {
 
 }
 
+Element.prototype.Sauter = function(){
+
+}
+
 function Lancer() {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight /2;
@@ -39,3 +44,4 @@ function Lancer() {
 	
 	requestAnimationFrame(Update);
 }
+
