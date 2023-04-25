@@ -102,6 +102,7 @@ Obstacle.prototype.Dessiner=function(){
     ctx.closePath();
 }
 
+
 function Lancer() {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight /2;
