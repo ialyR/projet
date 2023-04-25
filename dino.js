@@ -14,6 +14,8 @@ function Element (x, y, w, h, c) {
 	this.width=w;
 	this.height=h;
 	this.color=c;
+
+    
 }
     
 Element.prototype.Animer = function () {
@@ -23,6 +25,11 @@ Element.prototype.Animer = function () {
     ctx.moveTo(0,canvas.height);
     ctx.lineTo(canvas.width,canvas.height);
     ctx.stroke();
+
+    //animation de la gravité 
+    if (this.y+this.h<canvas.height){
+
+    }
 }
     
 Element.prototype.Dessiner = function() {
