@@ -4,6 +4,7 @@ const ctx = canvas.getContext('2d');
 // Variables
 let dino;
 let vitesse;
+let gravite;
 
 
 // Prototype Element
@@ -39,9 +40,13 @@ Element.prototype.Sauter = function(){
 function Lancer() {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight /2;
-	
+    vitesse=1;
+    gravite=1;
 	dino = new Element(25, 0, 50, 50, '#FF5858');
 	
 	requestAnimationFrame(Update);
 }
+
+
+
 
