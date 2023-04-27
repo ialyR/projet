@@ -6,7 +6,6 @@ let dino;
 let vitesse;
 let gravite;
 let keys={};
-let nSaut=0;
 let obstacles=[];
 
 
@@ -20,15 +19,17 @@ document.addEventListener('keydown', function (evt) {
 
 // Prototype Element
 function Element (x, y, w, h, c) {
-	this.xpos=x;
-	this.ypos=y;
-	this.width=w;
-	this.height=h;
+	this.x=x;
+	this.y=y;
+	this.w=w;
+	this.h=h;
 	this.color=c;
 
     this.dy=0;
     this.fSaut=15;
-    this.grounded = false;
+    this.sol = false;
+    this.tailleOG=this.h;
+    this.nSaut=0;
 }
     
 Element.prototype.Animer = function () {
@@ -45,17 +46,24 @@ Element.prototype.Animer = function () {
       } else {
         this.nSaut = 0;
     }
-    this.ypos += this.dy;
+
+    if (keys['ArrowDown']) {
+        this.h = this.tailleOG / 2;
+      } else {
+        this.h = this.tailleOG;
+      }
+
+    this.y += this.dy;
 
     //animation de la gravité 
-    if (this.ypos+this.height<canvas.height){
+    if (this.y+this.h<canvas.height){
         this.dy +=gravite;
-        this.grounded=false;
+        this.sol=false;
     }
     else{
         this.dy = 0;
-        this.grounded = true;
-        this.ypos = canvas.height - this.height;
+        this.sol = true;
+        this.y = canvas.height - this.h;
     }
     this.Dessiner();
 }
@@ -63,13 +71,13 @@ Element.prototype.Animer = function () {
 Element.prototype.Dessiner = function() {
     ctx.beginPath();
     ctx.fillStyle = this.color;
-    ctx.fillRect(this.xpos, this.ypos, this.width, this.height);
+    ctx.fillRect(this.x, this.y, this.w, this.h);
     ctx.closePath();
 
 }
 
 Element.prototype.Sauter = function(){
-    if (this.grounded && this.nSaut == 0) {
+    if (this.sol && this.nSaut == 0) {
         this.nSaut = 1;
         this.dy = -this.fSaut;
       } else if (this.nSaut > 0 && this.nSaut < 15) {
@@ -80,43 +88,99 @@ Element.prototype.Sauter = function(){
 }
 
 function Obstacle(x, y, w, h, c){
-    this.x1 = x;
-    this.y1 = y;
-    this.w1 = w;
-    this.h1 = h;
-    this.c1 = c;
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.c = c;
 
     this.dx=-vitesse;
 }
 
 Obstacle.prototype.Update=function(){
-    this.x1 += this.dx;
+    this.x += this.dx;
     this.Dessiner();
     this.dx = -vitesse;
 }
 
 Obstacle.prototype.Dessiner=function(){
     ctx.beginPath();
-    ctx.fillStyle = this.c1;
-    ctx.fillRect(this.x1, this.y1, this.w1, this.h1);
+    ctx.fillStyle = this.c;
+    ctx.fillRect(this.x, this.y, this.w, this.h);
     ctx.closePath();
 }
 
+function Apparition(){
+    let taille=RandomIntInRange(20, 70);
+    let type = RandomIntInRange(0, 1);
+    let obstacle = new Obstacle(canvas.width + taille, canvas.height - taille, taille, taille, '#2484E4');
+
+    if (type == 1) {
+        obstacle.y -= dino.originalHeight - 10;
+      }
+      obstacles.push(obstacle);
+}
+
+function RandomIntInRange (min, max) {
+    return Math.round(Math.random() * (max - min) + min);
+}
 
 function Lancer() {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight /2;
-    vitesse=1;
+    vitesse=3;
     gravite=1;
 	dino = new Element(25, 0, 50, 50, '#FF5858');
 	
 	requestAnimationFrame(Update);
 }
 
+let apparitionInit = 200;
+let apparitionT = apparitionInit;
+
 function Update() {
 	requestAnimationFrame(Update);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	dino.Animer();
+	
+    apparitionT--;
+    
+    if (apparitionT <= 0) {
+        Apparition();
+        console.log(obstacles);
+        apparitionT = apparitionInit - vitesse * 8;
+    
+        if (apparitionT < 60) {
+            apparitionT = 60;
+        }
+    }
+
+  // Apparition obstacle
+  for (let i = 0; i < obstacles.length; i++) {
+    let o = obstacles[i];
+
+    if (o.x + o.width< 0) {
+      obstacles.splice(i, 1);
+    }
+
+    if (
+      dino.x < o.x + o.w &&
+      dino.x + dino.w > o.x &&
+      dino.y < o.y + o.h &&
+      dino.y + dino.h > o.y
+    ) {
+      alert('Game over');
+      obstacles = [];
+      apparitionT = initialapparitionT;
+      vitesse = 3;
+      
+    }
+
+    o.Update();
+  }
+
+    dino.Animer();
+    
+    
 }
 
 Lancer();
